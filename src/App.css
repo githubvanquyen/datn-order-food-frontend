@@ -1,0 +1,10 @@
+.list_variant{
+    display: flex;
+    align-items: center;
+    border-radius: 4px;
+    padding: 0px 8px;
+    cursor: pointer;
+}
+.list_variant:hover, .list_search:hover{
+    background-color: #e7e7e7
+}
