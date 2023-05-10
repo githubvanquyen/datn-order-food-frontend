@@ -17,7 +17,23 @@ import ShoppingCartIcon from '@mui/icons-material/ShoppingCart';
 import SearchPopup from './SearchPopup';
 import axios from 'axios';
 import Divider from '@mui/material/Divider';;
-import { styled, alpha } from '@mui/material/styles';
+import { styled, alpha, createTheme, ThemeProvider } from '@mui/material/styles';
+import Badge, { BadgeProps } from '@mui/material/Badge';
+import { useAppSelector } from '../redux/hooks';
+import { Avatar } from '@mui/material';
+import UserPopup from './UserPopup';
+
+const StyledBadge = styled(Badge)<BadgeProps>(({ theme }) => ({
+  '& .MuiBadge-badge': {
+    right: -3,
+    top: 13,
+    border: `2px solid ${theme.palette.background.paper}`,
+    padding: '0 4px',
+  },
+  "& .MuiSvgIcon-root":{
+    color: "white"
+  }
+}));
 
 interface Iproduct {
   id: number,
@@ -26,6 +42,12 @@ interface Iproduct {
   description: string,
   regularPrice: string,
   salePrice: string,
+}
+interface ICollection{
+  id: number,
+  name: string,
+  image: string,
+  products: Iproduct[]
 }
 
 interface IProductRes {
@@ -44,22 +66,41 @@ interface IProductRes {
   },
   message: string,
 }
-const pages = ['Danh mục', 'sale', 'Bài viết'];
-const pagesUrl = ['collection', 'sale', 'blog'];
+
+const pagesUrl = ["drinks", "snacks", "fastfood", "flashsale", "blog"];
+const pages = ["đồ uống", "ăn vặt", "đồ ăn nhanh", "Khuyến mãi", "bài viết"];
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   ml: 1, 
   flex: 1, 
-  color: "white",
+  color: "rgb(0, 0, 0)",
   width: "100%",
   [theme.breakpoints.down('md')]: {
     display: "none"
   },
 }));
 
+const StyledAppBar = styled(AppBar)(({ theme }) => ({
+  color: "rgb(50,50,50)",
+  backgroundColor: "white"
+}));
+
+const StyledMenuItem = styled(MenuItem)(({ theme }) => ({
+  color: "rgb(50,50,50)"
+}));
+
+const StyledIconButton= styled(IconButton)(({ theme }) => ({
+  "svg.MuiSvgIcon-root": {
+    color: "rgb(50, 50, 50)"
+  }
+}));
+
 function Navbar() {
   const navigate = useNavigate()
+  const product = useAppSelector((state) => state.product);
+  const auth = useAppSelector((state) => state.auth);
   let [inputSearch, setInputSearch] = React.useState("");
+  let [openPopup, setOpenPopup] = React.useState(false);
   const [anchorElNav, setAnchorElNav] = React.useState<null | HTMLElement>(null);
 
   const handleOpenNavMenu = (event: React.MouseEvent<HTMLElement>) => {
@@ -80,6 +121,33 @@ function Navbar() {
     salePrice: ""
   }])
 
+  function stringToColor(string: string) {
+    let hash = 0;
+    let i;
+  
+    for (i = 0; i < string.length; i += 1) {
+      hash = string.charCodeAt(i) + ((hash << 5) - hash);
+    }
+  
+    let color = '#';
+  
+    for (i = 0; i < 3; i += 1) {
+      const value = (hash >> (i * 8)) & 0xff;
+      color += `00${value.toString(16)}`.slice(-2);
+    }
+  
+    return color;
+  }
+  
+  function stringAvatar(name: string) {
+    return {
+      sx: {
+        bgcolor: stringToColor(name),
+      },
+      children: name.indexOf(" ") !== -1 ? `${name.split(' ')[0][0]}${name.split(' ')[1][0]}`: `${name[0]}${name[name.length - 1]}`,
+    };
+  }
+
   const handleChangeInputSearch = (e: React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>) =>{
     setInputSearch(e.target.value);
     const fetchSearchData = async () =>{
@@ -90,12 +158,12 @@ function Navbar() {
     }
     fetchSearchData().then()
   }
-
+  
   return (
-    <AppBar position="static">
+    <StyledAppBar position="fixed">
       <Container maxWidth="xl">
         <Toolbar disableGutters>
-          <AdbIcon sx={{ display: { xs: 'none', md: 'flex' }, mr: 1 }} />
+          <img src="/Logo_DHCNHN.png" alt="Logo" height="60px"/>
           <Typography
             variant="h6"
             noWrap
@@ -106,12 +174,12 @@ function Navbar() {
               display: { xs: 'none', md: 'flex' },
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
               color: 'inherit',
+              marginRight: "20px",
               textDecoration: 'none',
             }}
           >
-            LOGO
+            CANTEEN HAUI
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -144,9 +212,9 @@ function Navbar() {
               }}
             >
               {pages.map((page, index) => (
-                <MenuItem key={page} onClick={() => handleCloseNavMenu(index)}>
-                  <Typography textAlign="center">{page}</Typography>
-                </MenuItem>
+                <StyledMenuItem key={page} onClick={() => handleCloseNavMenu(index)}>
+                  <Typography textAlign="center" sx={{ color: "rgb(50, 50, 50)"}}>{page}</Typography>
+                </StyledMenuItem>
               ))}
             </Menu>
           </Box>
@@ -162,19 +230,18 @@ function Navbar() {
               flexGrow: 1,
               fontFamily: 'monospace',
               fontWeight: 700,
-              letterSpacing: '.3rem',
               color: 'inherit',
               textDecoration: 'none',
             }}
           >
-            LOGO
+            CANTEEN DHCNHN
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
               <Button
                 key={page}
                 onClick={() => handleCloseNavMenu(index)}
-                sx={{ my: 2, color: 'white', display: 'block' }}
+                sx={{ my: 2, color: 'rgb(50,50,50)', display: 'block' }}
               >
                 {page}
               </Button>
@@ -188,22 +255,27 @@ function Navbar() {
                   placeholder="Search…"
                   inputProps={{ 'aria-label': 'search' }}
                 />
-                <IconButton type="button" sx={{ p: '10px' }} aria-label="search">
-                  <SearchIcon />
-                </IconButton>
+                <StyledIconButton type="button" sx={{ p: '10px' }} aria-label="search">
+                  <SearchIcon sx={{ color: "white" }}/>
+                </StyledIconButton>
                 <Divider sx={{ height: 28, m: 0.5 }} orientation="vertical" />
             </Box>
             <SearchPopup open={inputSearch !== ""} data={search}/>
           </Box>
-          <Button onClick={() =>{navigate("/cart")}}>
-              <ShoppingCartIcon color='disabled'/>
-          </Button>
-          <Box sx={{ flexGrow: 0, marginLeft: '2rem' }}>
-            <Button color="inherit" onClick={()=>{navigate("/login")}}>Login</Button>
+          <StyledIconButton aria-label="cart" onClick={() =>{ navigate("/cart")}}>
+            <StyledBadge badgeContent={product.length} color="warning">
+              <ShoppingCartIcon />
+            </StyledBadge>
+          </StyledIconButton>
+          <Box sx={{ flexGrow: 0, marginLeft: '2rem', position: 'relative' }}>
+            {
+              auth.isAuthenticated ? <Avatar {...stringAvatar("van")} sx={{cursor: "pointer"}} onClick={()=>{setOpenPopup((pre) => !pre)}}/> : <Button color="inherit" onClick={()=>{navigate("/login")}}>Login</Button>
+            } 
+            <UserPopup open={openPopup} data={auth}/>
           </Box>
         </Toolbar>
       </Container>
-    </AppBar>
+    </StyledAppBar>
   );
 }
 export default Navbar

@@ -8,3 +8,55 @@
 .list_variant:hover, .list_search:hover{
     background-color: #e7e7e7
 }
+.banner-container{
+    margin: 50px auto;
+    display: flex;
+    flex-direction: column;
+    align-items: self-start;
+    justify-content: center;
+}
+.banner-title{
+    font-size: 20px;
+    color: #6a1917;
+    font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, 'Open Sans', 'Helvetica Neue', sans-serif;
+}
+
+.banner-title-p {
+    font-size: 32px;
+    font-weight: 700;
+    margin-bottom: 8px;
+}
+
+.banner-button button{
+    border: none;
+    outline: none;
+    margin-top: 24px;
+    padding: 16px 24px;
+    font-size: large;
+    color: #6a1917;
+    border-radius: 8px;
+    cursor: pointer;
+}
+.banner-button button:hover{
+    opacity: 0.8;
+}
+.product-card-content:hover{
+    cursor: pointer;
+    opacity: 0.9;
+}
+.footer{
+    display: flex;
+    flex-direction: row;
+    justify-content: space-around;
+    align-items: flex-start;
+    padding: 24px 0px;
+    background-color:white;
+    color: rgb(50, 50, 50);
+}
+
+@media  screen and (max-width: 600px){
+    .footer{
+        flex-direction: column;
+        margin-left: 24px;
+    }
+}

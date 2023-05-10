@@ -7,7 +7,7 @@ import Box from "@mui/material/Box";
 import Typography from "@mui/material/Typography";
 import Container from "@mui/material/Container";
 import axios from "axios";
-import { createTheme } from "@mui/material/styles";
+import { createTheme, styled } from "@mui/material/styles";
 import { useLocation } from "react-router-dom";
 import { Checkbox, FormControlLabel, FormGroup } from "@mui/material";
 import Rating from '@mui/material/Rating';
@@ -15,8 +15,35 @@ import "../App.css";
 import { addProduct } from "../redux/slide/productSlide";
 import { useAppDispatch } from "../redux/hooks";
 import priceFormat from "./utils/priceFormat";
+import Comment from "./comment"
 
-const cards = [1, 2, 3, 4, 5, 6, 7, 8, 9, 10, 11, 12];
+
+const StyledButton = styled(Button)(({theme}) => ({
+    color: "#be6843",
+    borderColor: "#be6843",
+    ":hover" :{
+        borderColor: "#be6843",
+        backgroundColor: "rgba(211, 96, 29, 0.04)"
+    }
+}));
+
+const StyledButtonAdd = styled(Button)(({theme}) => ({
+    color: "#fff",
+    borderColor: "#be6843",
+    backgroundColor: "#be6843",
+    ":hover" :{
+        borderColor: "#be6843",
+        backgroundColor: "#be6843"
+    }
+}));
+
+const StyledCheckbox = styled(Checkbox)(({theme}) => ({
+    "&.Mui-checked": {
+        color: "#be6843"
+    }
+}));
+
+
 interface Iproduct {
     id: number;
     name: string;
@@ -62,6 +89,22 @@ interface IProductRes {
     };
     message: string;
 }
+
+
+interface FlashsaleRes{
+    data:{
+        success: boolean,
+        message: string,
+        data: {
+            dateEnd: string,
+            dateStart: string,
+            discountType: number,
+            discountValue: string,
+            id: number,
+            products: Iproduct[]
+        }
+    }
+}
 const theme = createTheme();
 
 export default function DetaiProduct() {
@@ -97,11 +140,13 @@ export default function DetaiProduct() {
     });
     const [value, setValue] = React.useState<number | null>(4);
 
+
     React.useEffect(() => {
         const fetchData = async () => {
             const response = await axios.get<IProductRes>(
                 `http://localhost:4000/api/product/get-product-by-id?id=${id}`
             );
+            const responseFls = await axios.get<any, FlashsaleRes>(`http://localhost:4000/api/flashsale/get-flashsale-datenow`)
             if (response.data.success) {
                 const product = response.data.data;
                 setProduct({
@@ -112,11 +157,13 @@ export default function DetaiProduct() {
                         price: JSON.parse(item.price) as number[],
                     })),
                 });
-                setPriceProduct(Number(product.salePrice));
+                const productFlashSale = responseFls.data.data !== null ? responseFls.data.data.products.map((item) => item.id) : [];
+                setPriceProduct((productFlashSale.length > 0 && productFlashSale.indexOf(product.id) !== -1) ? ((responseFls.data.data.discountType === 1 ? (Number(product.salePrice) - Math.floor(Number(product.salePrice) / Number(responseFls.data.data.discountValue)))
+                : (Number(product.salePrice) - Number(responseFls.data.data.discountValue)))) : Number(product.salePrice));
             }
         };
         fetchData().then();
-    }, []);
+    }, [id]);
 
     const handleChangeVariant = (e: React.ChangeEvent<HTMLInputElement>, id: number, index: number,  priceVariant: number) =>{
         if(e.target.checked){
@@ -158,7 +205,9 @@ export default function DetaiProduct() {
                                 alt="image-product"
                             />
                         </Box>
-                    
+                        <Box>
+                            <Comment productId={Number(id)}/>
+                        </Box>
                     </Grid>
                     <Grid item xs={12} sm={12} md={6}>
                         <Stack spacing={2}>
@@ -209,7 +258,7 @@ export default function DetaiProduct() {
                                                                 <div key={item} className="list_variant">
                                                                     <FormControlLabel
                                                                         control={
-                                                                            <Checkbox onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeVariant(e, variant.id, index, variant.price[index])}/>
+                                                                            <StyledCheckbox onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleChangeVariant(e, variant.id, index, variant.price[index])}/>
                                                                         }
                                                                         sx={{ width: "1000%"}}
                                                                         label={item}
@@ -229,8 +278,8 @@ export default function DetaiProduct() {
                             </Typography>
                             
                             <Stack spacing={2}>
-                                <Button variant="outlined" color="primary" size="large" onClick={() =>handleClickAddToCart()}>Thêm vào giỏ hàng</Button>
-                                <Button variant="contained" color="info" size="large">Mua ngay</Button>
+                                <StyledButton variant="outlined" size="large" onClick={() =>handleClickAddToCart()}>Thêm vào giỏ hàng</StyledButton>
+                                <StyledButtonAdd variant="contained" size="large">Mua ngay</StyledButtonAdd>
                             </Stack>
                         </Stack>
                     </Grid>

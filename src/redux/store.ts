@@ -1,4 +1,4 @@
-import {configureStore} from "@reduxjs/toolkit"
+import {combineReducers, configureStore} from "@reduxjs/toolkit"
 import {
     persistStore,
     persistReducer,
@@ -10,24 +10,25 @@ import {
     REGISTER,
 } from "redux-persist";
 import storage from "redux-persist/lib/storage";
-import authReducer from "./slide/authSlide"
 import productSlide from "./slide/productSlide";
 import orderSlider from "./slide/orderSlider";
+import authSlide from "./slide/authSlide";
 
 const persistConfig = {
     key: "root",
     version: 1,
     storage,
-  };
+};
 
-  const rootReducer = persistReducer(persistConfig, authReducer);
+const rootReducer = combineReducers({
+  auth: authSlide,
+  product: productSlide,
+  order: orderSlider
+})
+const persistReducers = persistReducer(persistConfig, rootReducer);
 
 const store = configureStore({
-    reducer:{
-        auth: rootReducer,
-        product: productSlide,
-        order: orderSlider
-    },
+    reducer: persistReducers,
     middleware: (getDefaultMiddleware) =>
     getDefaultMiddleware({
       serializableCheck: {

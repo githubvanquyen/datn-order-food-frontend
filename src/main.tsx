@@ -14,6 +14,21 @@ import { Provider } from "react-redux";
 import store from "./redux/store";
 import PublishedRoute from "./components/utils/PublishedRoute";
 import Cart from "./components/Cart";
+import { ThemeProvider, createTheme } from "@mui/material/styles";
+import Drink from "./components/Categories/Drink";
+import Snacks from "./components/Categories/Snacks";
+import Fastfood from "./components/Categories/Fastfood";
+import Deal from "./components/Categories/Deal";
+import Blog from "./components/Categories/Blog";
+
+const darkTheme = createTheme({
+    palette: {
+      mode: 'dark',
+      primary: {
+        main: '#1976d2',
+      },
+    },
+});
 
 ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
     <React.StrictMode>
@@ -50,6 +65,46 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
                         element={
                             <Layout>
                                 <CollectionProduct />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/drinks"
+                        element={
+                            <Layout>
+                                <Drink />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/snacks"
+                        element={
+                            <Layout>
+                                <Snacks />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/fastfood"
+                        element={
+                            <Layout>
+                                <Fastfood />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/flashsale"
+                        element={
+                            <Layout>
+                                <Deal />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/blog"
+                        element={
+                            <Layout>
+                                <Blog />
                             </Layout>
                         }
                     />

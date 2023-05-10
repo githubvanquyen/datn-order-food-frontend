@@ -12,8 +12,8 @@ const Layout = ({children}: layoutProps) => {
   return (
     <ThemeProvider theme={theme}>
         <CssBaseline />
-        <Navbar />
-            <div style={{ backgroundColor: "#f5f5f5"}}>{children}</div>
+        <Navbar/>
+            <div style={{ backgroundColor: "#f5f5f5", paddingTop: "70px"}}>{children}</div>
         <Footer/>
     </ThemeProvider>
   )

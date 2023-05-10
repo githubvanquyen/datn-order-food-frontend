@@ -52,6 +52,7 @@ export default function Checkout() {
             products: products,
             methodPayment: order.methodPayment,
             user: user.accessToken,
+            userName: order.userName
         })
         if(createPaymentResponse.data.success){
             window.open(createPaymentResponse.data.dataPayment.shortLink,"_blank");

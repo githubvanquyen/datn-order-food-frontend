@@ -7,50 +7,50 @@ import Typography from "@mui/material/Typography";
 
 const links = [
     "Giới thiệu",
-    "Trung tâm Trợ giúp",
+    "Trung tâm trợ giúp",
     "Điều khoản sử dụng",
     "Liên hệ",
-    "App Blog",
 ];
+
+const cs = [
+    "Chính sách bảo mật thông tin",
+    "Chính sách giao hàng",
+    "Chính sách kiểm hàng",
+    "Chính sách thanh toán",
+    "Chính sách đổi trả",
+]
 
 const Footer = () => {
     return (
-        <Box
-            sx={{
-                display: "flex",
-                flexDirection: "row",
-                justifyContent: "space-around",
-                alignItems: "flex-start",
-                padding: "24px 0px",
-                backgroundColor:"#1976d2",
-                color: "#fff"
-            }}
+        <>
+        <div
+            className="footer"
         >
             <Box>
-                <Typography variant="h6" sx={{padding: '0px 16px'}}>Công ty</Typography>
+                <Typography variant="h6" sx={{padding: '0px 16px'}}>Canteen Haui</Typography>
                 <List dense>
                     {links.map((item) => (
                         <ListItem key={item}>
-                            <a href="/abc" style={{ textDecoration: "none", color: "white"}}><ListItemText primary={item} /></a>
+                            <a href="/abc" style={{ textDecoration: "none", color: "rgb(50, 50, 50)"}}><ListItemText primary={item} /></a>
+                        </ListItem>
+                    ))}
+                </List>
+            </Box>
+            <Box sx={{ textAlign: "center"}}>
+                <Typography variant="h6" sx={{ textAlign: "left", padding: "0px 16px" }}>Bản quyền</Typography>
+                <List dense>
+                    {cs.map((item) => (
+                        <ListItem key={item}>
+                            <a href="/abc" style={{ textDecoration: "none", color: "rgb(50, 50, 50)"}}><ListItemText primary={item} /></a>
                         </ListItem>
                     ))}
                 </List>
             </Box>
             <Box>
-                <Typography variant="h6" sx={{padding: '0px 16px'}}>Công ty</Typography>
-                <List dense>
-                    {links.map((item) => (
-                        <ListItem key={item}>
-                            <ListItemText primary={item} />
-                        </ListItem>
-                    ))}
-                </List>
-            </Box>
-            <Box>
-                <Typography variant="h6" sx={{padding: '0px 16px'}}>Công ty</Typography>
+                <img src="/Logo_DHCNHN.png" alt="logo" height="80px"/>
                 <List dense>
                     <ListItem>
-                        <ListItemText>Trường đại học Công nghiệp Hà Nội</ListItemText>
+                        <ListItemText><Typography variant="h6">Trường đại học Công nghiệp Hà Nội</Typography></ListItemText>
                     </ListItem>
                     <ListItem>
                         <ListItemText>Chịu trách nhiệm quản lý nội dung: Phạm Văn Quyền</ListItemText>
@@ -63,7 +63,11 @@ const Footer = () => {
                     </ListItem>
                 </List>
             </Box>
+        </div>
+        <Box sx={{ backgroundColor: "rgb(51, 65, 85)", margin: "0px auto", color: "white", textAlign:"center" }}>
+            <div>© 2023 Canteen Haui</div>
         </Box>
+        </>
     );
 };
 
