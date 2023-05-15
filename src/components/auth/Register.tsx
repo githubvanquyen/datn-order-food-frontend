@@ -3,8 +3,7 @@ import Avatar from '@mui/material/Avatar';
 import Button from '@mui/material/Button';
 import CssBaseline from '@mui/material/CssBaseline';
 import TextField from '@mui/material/TextField';
-import FormControlLabel from '@mui/material/FormControlLabel';
-import Checkbox from '@mui/material/Checkbox';
+import Alert from '@mui/material/Alert';
 import Link from '@mui/material/Link';
 import Grid from '@mui/material/Grid';
 import Box from '@mui/material/Box';
@@ -14,11 +13,12 @@ import Container from '@mui/material/Container';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 
-import { useAppDispatch } from "../../redux/hooks"
-import { register } from "../../redux/slide/authSlide"
+import { useAppDispatch, useAppSelector } from "../../redux/hooks"
+import { closeError, register } from "../../redux/slide/authSlide"
 const theme = createTheme();
 
 export default function Register() {
+    const auth = useAppSelector(state => state.auth)
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
     
@@ -29,13 +29,30 @@ export default function Register() {
         firstName: data.get('firstName') as string,
         lastName: data.get('lastName') as string,
         email: data.get('email') as string,
-        password: data.get('password') as string
+        password: data.get('password') as string,
+        phoneNumber: data.get('phoneNumber') as string
     }
     dispatch(register(dataRegister))
   };
 
+  React.useEffect(() => {
+    let timeout:number;
+    if(auth.error.status){
+      timeout = setTimeout(() =>{
+      dispatch(closeError({}))
+      }, 1500)
+    }
+    return () => {
+      if(timeout){
+        clearInterval(timeout)
+      }
+    }
+  }, [auth.error])
+  
+
   return (
     <ThemeProvider theme={theme}>
+      {auth.error && auth.error.status && <Alert severity="error">{auth.error.message}</Alert>}
       <Container component="main" maxWidth="xs">
         <CssBaseline />
         <Box
@@ -83,6 +100,16 @@ export default function Register() {
                   label="Email"
                   name="email"
                   autoComplete="email"
+                />
+              </Grid>
+              <Grid item xs={12}>
+                <TextField
+                  required
+                  fullWidth
+                  id="phoneNumber"
+                  label="Số điện thoại"
+                  name="phoneNumber"
+                  autoComplete="false"
                 />
               </Grid>
               <Grid item xs={12}>

@@ -16,8 +16,10 @@ import AddressForm from './AddressForm';
 import PaymentForm from './PaymentForm';
 import Review from './Review';
 import axios from 'axios';
-import { useAppSelector } from '../../redux/hooks';
+import { useAppDispatch, useAppSelector } from '../../redux/hooks';
 import { useNavigate } from 'react-router-dom';
+import { addOrder } from '../../redux/slide/orderSlider';
+import { addProduct, clearProduct } from '../../redux/slide/productSlide';
 
 const steps = ['Địa chỉ giao hàng', 'Chi tiết đơn hàng' , 'Phương thức thanh toán'];
 
@@ -42,6 +44,7 @@ export default function Checkout() {
   const products = useAppSelector(state => state.product);
   const user = useAppSelector(state => state.auth);
   const navigate = useNavigate()
+  const dispatch = useAppDispatch()
 
   const handleNext = async () => {
     setActiveStep(activeStep + 1);
@@ -52,10 +55,15 @@ export default function Checkout() {
             products: products,
             methodPayment: order.methodPayment,
             user: user.accessToken,
-            userName: order.userName
+            userName: order.userName,
+            note: order.note,
         })
         if(createPaymentResponse.data.success){
+          if(createPaymentResponse.data.data.methodPayment === "1"){
             window.open(createPaymentResponse.data.dataPayment.shortLink,"_blank");
+          }
+          dispatch(addOrder({note: ""}))
+          dispatch(clearProduct({}))
         }
     }
   };
@@ -81,7 +89,7 @@ export default function Checkout() {
           {activeStep === steps.length ? (
             <React.Fragment>
               <Typography variant="h5" gutterBottom>
-                Thank you for your order.
+                Đặt hàng thành
               </Typography>
               <Typography variant="subtitle1">
               </Typography>

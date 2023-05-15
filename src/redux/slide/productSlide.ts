@@ -51,12 +51,15 @@ export const productSlide = createSlice({
         deleteProduct:(state, action: PayloadAction<{id: number}>) =>{
             let newState = state.filter((item) => (item.productId !== action.payload.id))
             return [...newState]
+        },
+        clearProduct: (state, action) =>{
+            return []
         }
     }
 })
 
 export const selectorProduct = (state: RootState) => state.product
 
-export const { addProduct, decreaseQuantity, increaseQuantity, deleteProduct } = productSlide.actions
+export const { addProduct, decreaseQuantity, increaseQuantity, deleteProduct, clearProduct } = productSlide.actions
 
 export default productSlide.reducer

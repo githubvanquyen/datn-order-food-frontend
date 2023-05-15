@@ -36,6 +36,8 @@ interface orderState {
     floor: string,
     room:string,
     methodPayment: string,
+    note: string,
+    phoneNumber: string
 }
 
 
@@ -45,6 +47,8 @@ const initialOrder: orderState = {
     floor: "",
     room:"",
     methodPayment: "0",
+    note: "",
+    phoneNumber: ""
 }
 
 interface orderPayload {
@@ -53,6 +57,8 @@ interface orderPayload {
     floor?: string,
     room?:string,
     methodPayment?: string,
+    note?: string
+    phoneNumber?: string
 }
 
 export const orderSlider = createSlice({

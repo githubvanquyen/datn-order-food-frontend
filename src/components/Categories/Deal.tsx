@@ -122,7 +122,7 @@ export default function Deal() {
                     <CardContent sx={{ textTransform: "uppercase" }}>
                       <span style={{ fontSize: "19px", color: "#9a3a38", fontWeight: "600" }}>
                         {
-                            (inforDiscount.discountType === 1 ? (priceFormat.format(Number(product.salePrice) - Math.floor(Number(product.salePrice) / Number(inforDiscount.discountValue)))
+                            (inforDiscount.discountType === 1 ? (priceFormat.format(Number(product.salePrice) - Math.floor(Number(product.salePrice) / 100 * Number(inforDiscount.discountValue)))
                             ): (priceFormat.format(Number(Number(product.salePrice) - Number(inforDiscount.discountValue)))))
                             
                         }

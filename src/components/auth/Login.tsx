@@ -26,7 +26,7 @@ export default function Login() {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
     const dataLogin = {
-      email: data.get('email') as string,
+      emailOrPhoneNumber: data.get('emailOrPhoneNumber') as string,
       password: data.get('password') as string,
     };
     dispatch(login(dataLogin));
@@ -71,10 +71,10 @@ export default function Login() {
                 margin="normal"
                 required
                 fullWidth
-                id="email"
-                label="Email"
-                name="email"
-                autoComplete="email"
+                id="emailOrPhoneNumber"
+                label="Email hoặc Số điện thoại"
+                name="emailOrPhoneNumber"
+                autoComplete="false"
                 autoFocus
               />
               <TextField
@@ -87,10 +87,6 @@ export default function Login() {
                 id="password"
                 autoComplete="current-password"
               />
-              <FormControlLabel
-                control={<Checkbox value="remember" color="primary" />}
-                label="Remember me"
-              />
               <Button
                 type="submit"
                 fullWidth
@@ -100,11 +96,6 @@ export default function Login() {
                 Đăng nhập
               </Button>
               <Grid container>
-                <Grid item xs>
-                  <Link href="#" variant="body2">
-                    Quên mật khẩu?
-                  </Link>
-                </Grid>
                 <Grid item>
                   <Link style={{ cursor: "pointer"}} onClick={() => {navigate("/register")}} variant="body2">
                     {"Bạn chưa có tài khoản? Đăng kí"}

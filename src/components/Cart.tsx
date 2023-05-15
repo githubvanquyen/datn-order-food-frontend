@@ -20,6 +20,7 @@ import DeleteIcon from '@mui/icons-material/Delete';
 import { decreaseQuantity, deleteProduct, increaseQuantity } from '../redux/slide/productSlide';
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
+import { addOrder } from '../redux/slide/orderSlider';
 
 
 interface productState {
@@ -106,6 +107,7 @@ interface DiscountRes {
 
 const Cart = () => {
     const products:productState[] = useAppSelector((state) => state.product);
+    const order = useAppSelector((state) => state.order)
     const [totalPrice, setTotalPrice] = React.useState(0)
     const [open, setOpen] = React.useState(false);
     const [discountAdded, setDiscountAdded] =  React.useState<Discount | null>(null);
@@ -145,15 +147,17 @@ const Cart = () => {
         setDiscountState(true);
         let newTotalPrice = 0;
         if(discountSelected && discountSelected.length > 0 && !discountStatus) {
-            if(discountAdded?.type === 1){
-                const priceSale = Math.floor(totalPrice / Number(discountSelected[0].value))
-                if(priceSale > Number(discountSelected[0].maximumDiscount)){
-                    newTotalPrice = totalPrice - Number(discountSelected[0].maximumDiscount);
+            if(totalPrice > Number(discountSelected[0].minimumPrice)){
+                if(discountSelected[0]?.type === 1){
+                    const priceSale = Math.floor(totalPrice / 100 * Number(discountSelected[0].value))
+                    if(priceSale > Number(discountSelected[0].maximumDiscount)){
+                        newTotalPrice = totalPrice - Number(discountSelected[0].maximumDiscount);
+                    }else{
+                        newTotalPrice =  totalPrice - Math.floor(totalPrice / 100 * Number(discountSelected[0].value));
+                    }
                 }else{
-                    newTotalPrice =  totalPrice - Math.floor(totalPrice / Number(discountSelected[0].value));
+                    newTotalPrice =  totalPrice - Number(discountSelected[0].value)
                 }
-            }else{
-                newTotalPrice =  totalPrice - Number(discountSelected[0].value)
             }
             setTotalPrice(newTotalPrice)
         }
@@ -216,18 +220,20 @@ const Cart = () => {
         }
         <Box>
             <Box>
-                <Paper sx={{ padding: "24px", marginBottom: "16px" }} elevation={2}>
+                <Paper sx={{ padding: "24px", marginBottom: "16px", display: "flex", justifyContent:"space-between" }} elevation={2}>
                     <span style={{ fontSize: "18px", fontWeight: "600"}}>Tổng tiền: {priceFormat.format(totalPrice)}</span>
-                    <div>
+                    <div><div>
                         Ghi chú <br/>
-                        <textarea cols={25} rows={4}/>
+                        <textarea cols={25} rows={4} value={order.note} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => dispatch(addOrder({note:e.target.value}))}/>
                     </div>
                     <div>
-                        <Button onClick={handleOpen}>Chọn mã giảm giá</Button>
+                        <StyledButton onClick={handleOpen} sx={{width: "100%"}}>Chọn mã giảm giá</StyledButton>
                     </div>
-                    
+                    </div>
                 </Paper>
-                <StyledButton fullWidth variant='contained' size="large" onClick={()=>{navigate("/checkout")}}>Đặt đơn</StyledButton>
+                <Box sx={{display: "flex", justifyContent:"flex-end"}}>
+                    <StyledButton variant='contained' size="large" onClick={()=>{navigate("/checkout")}}>Đặt đơn</StyledButton>
+                </Box>
             </Box>
         </Box>
         <Modal
@@ -256,7 +262,7 @@ const Cart = () => {
                 }
             </List>
             <div style={{ display: 'flex', justifyContent: "flex-end" }}>
-                <Button onClick={handleClose} variant='contained'>Đóng</Button>
+                <StyledButton onClick={handleClose} variant='contained'>Đóng</StyledButton>
             </div>
             </Box>
         </Modal>

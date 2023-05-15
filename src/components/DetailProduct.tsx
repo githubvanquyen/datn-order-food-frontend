@@ -158,7 +158,7 @@ export default function DetaiProduct() {
                     })),
                 });
                 const productFlashSale = responseFls.data.data !== null ? responseFls.data.data.products.map((item) => item.id) : [];
-                setPriceProduct((productFlashSale.length > 0 && productFlashSale.indexOf(product.id) !== -1) ? ((responseFls.data.data.discountType === 1 ? (Number(product.salePrice) - Math.floor(Number(product.salePrice) / Number(responseFls.data.data.discountValue)))
+                setPriceProduct((productFlashSale.length > 0 && productFlashSale.indexOf(product.id) !== -1) ? ((responseFls.data.data.discountType === 1 ? (Number(product.salePrice) - Math.floor(Number(product.salePrice) / 100 * Number(responseFls.data.data.discountValue)))
                 : (Number(product.salePrice) - Number(responseFls.data.data.discountValue)))) : Number(product.salePrice));
             }
         };

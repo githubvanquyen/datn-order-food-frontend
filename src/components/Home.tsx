@@ -134,7 +134,7 @@ export default function Home() {
                     <CardContent sx={{ textTransform: "uppercase" }}>
                       <span style={{ fontSize: "19px", color: "#9a3a38", fontWeight: "600" }}>
                         {
-                          (productsFls.length > 0 && productsFls.indexOf(product.id) !== -1) ? ((inforDiscount.discountType === 1 ? (priceFormat.format(Number(product.salePrice) - Math.floor(Number(product.salePrice) / Number(inforDiscount.discountValue)))
+                          (productsFls.length > 0 && productsFls.indexOf(product.id) !== -1) ? ((inforDiscount.discountType === 1 ? (priceFormat.format(Number(product.salePrice) - Math.floor(Number(product.salePrice) / 100 * Number(inforDiscount.discountValue)))
                           ): (priceFormat.format(Number(Number(product.salePrice) - Number(inforDiscount.discountValue)))))) : priceFormat.format(Number(product.salePrice))
                         }
                       </span>
