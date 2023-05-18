@@ -31,7 +31,7 @@ const Footer = () => {
                 <List dense>
                     {links.map((item) => (
                         <ListItem key={item}>
-                            <a href="/abc" style={{ textDecoration: "none", color: "rgb(50, 50, 50)"}}><ListItemText primary={item} /></a>
+                            <a href="#" style={{ textDecoration: "none", color: "rgb(50, 50, 50)"}}><ListItemText primary={item} /></a>
                         </ListItem>
                     ))}
                 </List>
@@ -41,7 +41,7 @@ const Footer = () => {
                 <List dense>
                     {cs.map((item) => (
                         <ListItem key={item}>
-                            <a href="/abc" style={{ textDecoration: "none", color: "rgb(50, 50, 50)"}}><ListItemText primary={item} /></a>
+                            <a href="#" style={{ textDecoration: "none", color: "rgb(50, 50, 50)"}}><ListItemText primary={item} /></a>
                         </ListItem>
                     ))}
                 </List>

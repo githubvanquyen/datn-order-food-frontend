@@ -12,10 +12,22 @@ const theme = createTheme();
 
 export default function Review() {
     const products = useAppSelector(state => state.product);
+    const discount = useAppSelector(state => state.discount);
     const total = React.useRef(0);
     products.map((product) =>{
         total.current += product.quantity * product.productPrice
     })
+    let newTotalPrice;
+    if(discount?.type === 1){
+        const priceSale = Math.floor(total.current / 100 * Number(discount.value))
+        if(priceSale > Number(discount.maximumDiscount)){
+            newTotalPrice = total.current - Number(discount.maximumDiscount);
+        }else{
+            newTotalPrice =  total.current - Math.floor(total.current / 100 * Number(discount.value));
+        }
+    }else{
+        newTotalPrice =  total.current - Number(discount.value)
+    }
     return (
         <React.Fragment>
         <Typography variant="h6" gutterBottom>
@@ -44,9 +56,15 @@ export default function Review() {
             </ListItem>
             ))}
             <ListItem sx={{ py: 1, px: 0 }}>
+            <ListItemText primary="Giảm giá" />
+            <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
+                {discount.id !== 0 && discount.name}
+            </Typography>
+            </ListItem>
+            <ListItem sx={{ py: 1, px: 0 }}>
             <ListItemText primary="Tổng" />
             <Typography variant="subtitle1" sx={{ fontWeight: 700 }}>
-                {priceFormat.format(total.current)}
+                {priceFormat.format(newTotalPrice)}
             </Typography>
             </ListItem>
         </List>

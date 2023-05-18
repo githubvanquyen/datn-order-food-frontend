@@ -43,6 +43,7 @@ export default function Checkout() {
   const order = useAppSelector(state => state.order);
   const products = useAppSelector(state => state.product);
   const user = useAppSelector(state => state.auth);
+  const discount = useAppSelector(state => state.discount);
   const navigate = useNavigate()
   const dispatch = useAppDispatch()
 
@@ -52,11 +53,13 @@ export default function Checkout() {
         const createPaymentResponse =  await axios.post("http://localhost:4000/api/payment/create",{
             username: order.userName,
             address: order.building + " " + order.floor + " " + order.room,
+            phoneNumber: order.phoneNumber,
             products: products,
             methodPayment: order.methodPayment,
             user: user.accessToken,
             userName: order.userName,
             note: order.note,
+            discountId: discount.id 
         })
         if(createPaymentResponse.data.success){
           if(createPaymentResponse.data.data.methodPayment === "1"){
@@ -89,7 +92,7 @@ export default function Checkout() {
           {activeStep === steps.length ? (
             <React.Fragment>
               <Typography variant="h5" gutterBottom>
-                Đặt hàng thành
+                { (products.length > 0) ? "Đặt hàng thất bại" : "Đặt hàng thành công"}
               </Typography>
               <Typography variant="subtitle1">
               </Typography>

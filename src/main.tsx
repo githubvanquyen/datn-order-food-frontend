@@ -20,6 +20,7 @@ import Snacks from "./components/Categories/Snacks";
 import Fastfood from "./components/Categories/Fastfood";
 import Deal from "./components/Categories/Deal";
 import Blog from "./components/Categories/Blog";
+import Order from "./components/Order";
 
 const darkTheme = createTheme({
     palette: {
@@ -113,6 +114,14 @@ ReactDOM.createRoot(document.getElementById("root") as HTMLElement).render(
                         element={
                             <Layout>
                                 <Checkout />
+                            </Layout>
+                        }
+                    />
+                    <Route
+                        path="/order"
+                        element={
+                            <Layout>
+                                <Order />
                             </Layout>
                         }
                     />

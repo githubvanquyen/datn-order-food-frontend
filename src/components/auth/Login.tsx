@@ -7,6 +7,7 @@ import FormControlLabel from '@mui/material/FormControlLabel';
 import Checkbox from '@mui/material/Checkbox';
 import Link from '@mui/material/Link';
 import Paper from '@mui/material/Paper';
+import Alert from '@mui/material/Alert';
 import Box from '@mui/material/Box';
 import Grid from '@mui/material/Grid';
 import LockOutlinedIcon from '@mui/icons-material/LockOutlined';
@@ -14,14 +15,15 @@ import Typography from '@mui/material/Typography';
 import { createTheme, ThemeProvider } from '@mui/material/styles';
 import { useNavigate } from 'react-router-dom';
 
-import { useAppDispatch } from "../../redux/hooks";
-import { login } from "../../redux/slide/authSlide";
+import { useAppDispatch, useAppSelector } from "../../redux/hooks";
+import { closeError, login } from "../../redux/slide/authSlide";
 
 const theme = createTheme();
 
 export default function Login() {
     const navigate = useNavigate();
     const dispatch = useAppDispatch();
+    const auth = useAppSelector(state => state.auth);
   const handleSubmit = (event: React.FormEvent<HTMLFormElement>) => {
     event.preventDefault();
     const data = new FormData(event.currentTarget);
@@ -32,8 +34,23 @@ export default function Login() {
     dispatch(login(dataLogin));
   };
 
+  React.useEffect(() => {
+    let timeout:number;
+    if(auth.error.status){
+      timeout = setTimeout(() =>{
+      dispatch(closeError({}))
+      }, 1500)
+    }
+    return () => {
+      if(timeout){
+        clearInterval(timeout)
+      }
+    }
+  }, [auth.error])
+
   return (
     <ThemeProvider theme={theme}>
+      {auth.error && auth.error.status && <Alert severity="error">{auth.error.message}</Alert>}
       <Grid container component="main" sx={{ height: '100vh' }}>
         <CssBaseline />
         <Grid
@@ -42,7 +59,7 @@ export default function Login() {
           sm={4}
           md={7}
           sx={{
-            backgroundImage: 'url(https://source.unsplash.com/random)',
+            backgroundImage: 'url(/public/svgexport-19.svg)',
             backgroundRepeat: 'no-repeat',
             backgroundColor: (t) =>
               t.palette.mode === 'light' ? t.palette.grey[50] : t.palette.grey[900],

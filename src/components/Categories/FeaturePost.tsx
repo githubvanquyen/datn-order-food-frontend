@@ -24,7 +24,7 @@ export default function FeaturePost(props: FeaturedPostProps) {
   const { post } = props;
 
   return (
-    <Grid item xs={12} md={6}>
+    <Grid item xs={12} md={12}>
       <CardActionArea component="a" href="#">
         <Card sx={{ display: 'flex' }}>
           <CardContent sx={{ flex: 1 }}>
@@ -36,9 +36,6 @@ export default function FeaturePost(props: FeaturedPostProps) {
             </Typography>
             <Typography variant="subtitle1" paragraph>
               {post.content}
-            </Typography>
-            <Typography variant="subtitle1" color="primary">
-              Đọc tiếp
             </Typography>
           </CardContent>
           <CardMedia

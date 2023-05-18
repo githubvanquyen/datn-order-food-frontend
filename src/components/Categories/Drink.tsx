@@ -64,7 +64,7 @@ export default function Drink() {
 
     React.useEffect(() =>{
         const fetchData = async () =>{
-        const response = await axios.get(`http://localhost:4000/api/collection/get-collection-by-id?id=${1}`)
+        const response = await axios.get(`http://localhost:4000/api/collection/get-collection-by-id?id=${3}`)
         const responseFls = await axios.get<any, FlashsaleRes>(`http://localhost:4000/api/flashsale/get-flashsale-datenow`)
         if(responseFls.data.success){
             setInfoDiscount({
@@ -117,7 +117,7 @@ export default function Drink() {
                             {product.name}
                           </Typography>
                           <Typography color="rgb(50, 50, 50)">
-                            {product.description}
+                          {product.description.length > 50 ? product.description.slice(0, 50) + "..." : product.description}
                           </Typography>
                         </CardContent>
                         <CardContent sx={{ textTransform: "uppercase" }}>

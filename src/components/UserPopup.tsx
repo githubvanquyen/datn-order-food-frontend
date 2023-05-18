@@ -24,6 +24,7 @@ export default function UserPopup({open, data}: UserPopupProps) {
   const dispatch = useAppDispatch();
   const handleLogout = () =>{
     dispatch(logout({}))
+    navigate("/login")
   }
 
   return (
@@ -41,7 +42,7 @@ export default function UserPopup({open, data}: UserPopupProps) {
       zIndex: 10,
       cursor: "pointer"
     }}>
-        <ListItem onClick={() =>{navigate(`/user/${data.id}`)}} className='list_search'>
+        <ListItem onClick={() =>{navigate(`/order`)}} className='list_search'>
           <ListItemText primary="Đơn hàng đã đặt" sx={{ color: "black"}} />
         </ListItem>
         <ListItem onClick={() =>{handleLogout()}} className='list_search'>

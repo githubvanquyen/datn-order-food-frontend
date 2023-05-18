@@ -54,6 +54,26 @@
     color: rgb(50, 50, 50);
 }
 
+.recommend{
+    display: flex;
+    justify-content: center;
+    padding: 46px;
+    align-items: center;
+    background-color: #ececec;
+    border-radius: 20px;
+}
+.recommend .home-title{
+    padding: 12px;
+    font-weight: 600;
+    font-size: 1.5rem;
+    color: rgb(255, 68, 61);
+    text-align: center;
+}
+.recommend .home-content{
+    text-align: center;
+    padding: 12px 46px;
+}
+
 @media  screen and (max-width: 600px){
     .footer{
         flex-direction: column;

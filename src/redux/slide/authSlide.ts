@@ -99,6 +99,12 @@ export const authSlide = createSlice({
                 message: "Đăng kí tài khoản thất bại"
             }
         })
+        builder.addCase(login.rejected, (state: authState, action) =>{
+            state.error = {
+                status: true,
+                message: "Đăng nhập thất bại: Sai số điện thoại hoặc mật khẩu"
+            }
+        })
         builder.addCase(register.fulfilled, (state: authState, action: PayloadAction<authResponse>) =>{            
             const {firstName, lastName, token, id, phoneNumber } = action.payload.data;
                 state.id = id

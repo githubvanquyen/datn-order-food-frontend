@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import Container from '@mui/material/Container';
 import Modal from '@mui/material/Modal';
 import Paper from '@mui/material/Paper';
@@ -21,6 +21,7 @@ import { decreaseQuantity, deleteProduct, increaseQuantity } from '../redux/slid
 import { useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { addOrder } from '../redux/slide/orderSlider';
+import { setDiscount } from '../redux/slide/discountSlide';
 
 
 interface productState {
@@ -85,8 +86,8 @@ const styleModal = {
 };
 
 interface Discount{
-    id: number
     name: string,
+    id: number
     value: string,
     type: number,
     minimumPrice: string,
@@ -94,7 +95,7 @@ interface Discount{
     expiredDate: string,
     quantity: number,
     products: [],
-    customers: []
+    users: []
 }
 
 interface DiscountRes {
@@ -108,11 +109,13 @@ interface DiscountRes {
 const Cart = () => {
     const products:productState[] = useAppSelector((state) => state.product);
     const order = useAppSelector((state) => state.order)
+    const auth = useAppSelector((state) => state.auth)
     const [totalPrice, setTotalPrice] = React.useState(0)
+    const [customerIsAppied, setCustomerIsAppied] = useState(false);
     const [open, setOpen] = React.useState(false);
     const [discountAdded, setDiscountAdded] =  React.useState<Discount | null>(null);
     const [discounts, setDiscounts] = React.useState<Discount[]>([]);
-    const [discountStatus, setDiscountState] = React.useState(false);
+    const dispatch = useAppDispatch();
 
     const handleOpen = () => {
         setOpen(true);
@@ -120,7 +123,6 @@ const Cart = () => {
     const handleClose = () => {
         setOpen(false);
     };
-    const dispatch = useAppDispatch();
     const theme = createTheme();
     const navigate = useNavigate();
 
@@ -136,7 +138,15 @@ const Cart = () => {
         const fetchDiscount = async () =>{
             const response = await axios.get<any, DiscountRes>("http://localhost:4000/api/discount/get-all-discount");
             if(response.data.success){
-                setDiscounts(response.data.data);
+                const applied = response.data.data.filter(data => {
+                    const isAppied = data.users.filter((user: any) => user.id === auth.id)
+                    if(isAppied && isAppied.length > 0){
+                        return true
+                    }else{
+                        return false
+                    }
+                }) 
+                setDiscounts(applied);
             }
         }
         fetchDiscount().then()
@@ -144,9 +154,8 @@ const Cart = () => {
     const handleAddDiscount = (id: number) =>{
         const discountSelected = discounts.filter(item => item.id === id);
         setDiscountAdded(discountSelected[0]);
-        setDiscountState(true);
         let newTotalPrice = 0;
-        if(discountSelected && discountSelected.length > 0 && !discountStatus) {
+        if(discountSelected && discountSelected.length > 0 && discountAdded?.id !== id) {
             if(totalPrice > Number(discountSelected[0].minimumPrice)){
                 if(discountSelected[0]?.type === 1){
                     const priceSale = Math.floor(totalPrice / 100 * Number(discountSelected[0].value))
@@ -158,9 +167,25 @@ const Cart = () => {
                 }else{
                     newTotalPrice =  totalPrice - Number(discountSelected[0].value)
                 }
+                setTotalPrice(newTotalPrice)
+            }else {
+                setDiscountAdded(null)
+                alert("Đơn hàng không đạt giá trị tối thiểu")
             }
-            setTotalPrice(newTotalPrice)
         }
+    }
+    const handleOrder = () =>{
+        dispatch(setDiscount({
+            name: discountAdded?.name || "",
+            id: discountAdded?.id || 0,
+            value: discountAdded?.value || "",
+            type: discountAdded?.type || 0,
+            minimumPrice: discountAdded?.minimumPrice || "",
+            maximumDiscount: discountAdded?.maximumDiscount || "",
+            expiredDate: discountAdded?.expiredDate || "",
+            quantity: discountAdded?.quantity || 0
+        }))
+        navigate("/checkout")
     }
   return (
         products.length > 0 ? <Container sx={{ py: 8 }} maxWidth="lg">
@@ -227,12 +252,12 @@ const Cart = () => {
                         <textarea cols={25} rows={4} value={order.note} onChange={(e: React.ChangeEvent<HTMLTextAreaElement>) => dispatch(addOrder({note:e.target.value}))}/>
                     </div>
                     <div>
-                        <StyledButton onClick={handleOpen} sx={{width: "100%"}}>Chọn mã giảm giá</StyledButton>
+                        {auth.accessToken && <StyledButton onClick={handleOpen} sx={{width: "100%"}}>Chọn mã giảm giá</StyledButton> }
                     </div>
                     </div>
                 </Paper>
                 <Box sx={{display: "flex", justifyContent:"flex-end"}}>
-                    <StyledButton variant='contained' size="large" onClick={()=>{navigate("/checkout")}}>Đặt đơn</StyledButton>
+                    <StyledButton variant='contained' size="large" onClick={handleOrder}>Đặt đơn</StyledButton>
                 </Box>
             </Box>
         </Box>
@@ -244,10 +269,10 @@ const Cart = () => {
         >
             <Box sx={{ ...styleModal, width: 500 }}>
             <h2 id="child-modal-title">Mã giảm giá</h2>
-            <List sx={{ width: '100%', maxWidth: 360, bgcolor: 'background.paper' }}>
+            <List sx={{ width: '100%', bgcolor: 'background.paper' }}>
                 {
-                    discounts && discounts.map((discount) =>(
-                        <div key={discount.id}>
+                    (discounts && discounts.length > 0)  ? discounts.map((discount) =>(
+                        <div key={discount.id} style={discountAdded?.id === discount.id ? {backgroundColor: "#e4e4e4"} : {}}>
                         <ListItem onClick={()=>{handleAddDiscount(discount.id)}} sx={{ cursor: "pointer" }}>
                             <ListItemAvatar>
                             <Avatar>
@@ -258,7 +283,7 @@ const Cart = () => {
                         </ListItem>
                         <Divider variant="inset" component="li" />
                         </div>
-                    ))
+                    )) : "Không có mã giảm giá nào"
                 }
             </List>
             <div style={{ display: 'flex', justifyContent: "flex-end" }}>
@@ -269,7 +294,15 @@ const Cart = () => {
     </Container> :
     (
         <Container>
-            <Typography variant='h4' sx={{ textAlign:"center", padding: "200px 0px" }}>Giỏ hàng rỗng</Typography>
+            
+            <Typography variant='h4' sx={{ textAlign:"center", padding: "200px 0px" }}>
+                <img src='/public/svgexport-56.svg'/>
+                <div>
+                    Giỏ hàng trống mất rồi
+                    Nhanh tay đặt ngay nào
+                </div>
+                <Button variant='contained' onClick={() => {navigate("/")}}>Đặt ngay</Button>
+            </Typography>
         </Container>
     )
   )

@@ -2,7 +2,7 @@ import { Container } from '@mui/joy';
 import axios from 'axios'
 import React from 'react'
 import Grid from '@mui/material/Grid';
-import FeaturePost from './featurePost';
+import FeaturePost from './FeaturePost';
 
 interface Blog {
   createdAt: string;
@@ -29,7 +29,7 @@ const Blog = () => {
       <Grid container spacing={4}>
         {
           blogs && blogs.map((blog: Blog) =>(
-            <FeaturePost post={blog}/>
+            <FeaturePost post={blog} key={blog.title}/>
           ))
         }
       </Grid>

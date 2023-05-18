@@ -93,7 +93,7 @@ export default function Deal() {
                     products.length >= 1 && products[0].id !== 0 ? (<Grid item xs={12} sm={6} md={12}>
                         <Typography variant='h5'>Khuyến mãi (Flash sale từ {dateFormat(inforDiscount.dateStart)} đến {dateFormat(inforDiscount.dateEnd)})</Typography>
                         <div>Khám phá nhiều ưu đãi hấp dẫn nhanh tay khẻo lỡ</div>
-                    </Grid>) : null
+                    </Grid>) : <h2>Chưa có khung giờ khuyến mãi nào</h2>
                 }   
                 <Grid item xs={12} sm={6} md={12}>
                 </Grid>
@@ -116,7 +116,7 @@ export default function Deal() {
                         {product.name}
                       </Typography>
                       <Typography color="rgb(50, 50, 50)">
-                        {product.description}
+                        {product.description.length > 50 ? product.description.slice(0, 50) + "..." : product.description}
                       </Typography>
                     </CardContent>
                     <CardContent sx={{ textTransform: "uppercase" }}>

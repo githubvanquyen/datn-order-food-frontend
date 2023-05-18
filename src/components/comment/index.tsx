@@ -38,6 +38,10 @@ interface props{
 }
 const index = ({productId}:props) => {
     const [input, setInput] = useState("");
+    const [error, setError] = useState({
+        field: "",
+        message: ""
+    })
     const [comment, setComment] = useState<commentRes[]>([{
         id: 0,
         image: "",
@@ -66,7 +70,14 @@ const index = ({productId}:props) => {
             rate: 5
         })
         if(response.data.success){
-            setIsCommented(true);
+            setIsCommented((pre) => !pre);
+            setInput("")
+        }else{
+            setError({
+                field: response.data.error.field,
+                message: response.data.error.message,
+            })
+            alert("Bạn cần đăng nhập để sử dụng tính năng này")
         }
     }   
     useEffect(() =>{
@@ -81,6 +92,15 @@ const index = ({productId}:props) => {
 
     return (
         <Box sx={{ padding: "24px 12px" }}>
+            <form onSubmit={(e) => handleSubmitComment(e)}>
+                <TextField 
+                    fullWidth 
+                    variant='standard' 
+                    value={input} 
+                    onChange={changeInput} 
+                    placeholder='Bình luận về món ăn'
+                />
+            </form>
             <Box>
             <List sx={{ width: '100%' }}>
                 {

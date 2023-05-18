@@ -68,7 +68,7 @@ interface IProductRes {
 }
 
 const pagesUrl = ["drinks", "snacks", "fastfood", "flashsale", "blog"];
-const pages = ["đồ uống", "ăn vặt", "đồ ăn nhanh", "Khuyến mãi", "bài viết"];
+const pages = ["đồ uống", "ăn vặt", "đồ ăn", "Khuyến mãi", "bài viết"];
 
 const StyledInputBase = styled(InputBase)(({ theme }) => ({
   ml: 1, 
@@ -179,7 +179,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            CANTEEN HAUI
+            CĂNG TIN DHCNHN
           </Typography>
 
           <Box sx={{ flexGrow: 1, display: { xs: 'flex', md: 'none' } }}>
@@ -234,7 +234,7 @@ function Navbar() {
               textDecoration: 'none',
             }}
           >
-            CANTEEN DHCNHN
+            CĂNG TIN HAUI
           </Typography>
           <Box sx={{ flexGrow: 1, display: { xs: 'none', md: 'flex' } }}>
             {pages.map((page, index) => (
@@ -252,7 +252,7 @@ function Navbar() {
                 <StyledInputBase
                   value={inputSearch}
                   onChange={(e) => handleChangeInputSearch(e)}
-                  placeholder="Search…"
+                  placeholder="Tìm kiếm…"
                   inputProps={{ 'aria-label': 'search' }}
                 />
                 <StyledIconButton type="button" sx={{ p: '10px' }} aria-label="search">
@@ -269,7 +269,7 @@ function Navbar() {
           </StyledIconButton>
           <Box sx={{ flexGrow: 0, marginLeft: '2rem', position: 'relative' }}>
             {
-              auth.isAuthenticated ? <Avatar {...stringAvatar("van")} sx={{cursor: "pointer"}} onClick={()=>{setOpenPopup((pre) => !pre)}}/> : <Button color="inherit" onClick={()=>{navigate("/login")}}>Login</Button>
+              auth.isAuthenticated ? <Avatar {...stringAvatar(auth.username.slice(0,2) + auth.username[auth.username.length - 1])} sx={{cursor: "pointer"}} onClick={()=>{setOpenPopup((pre) => !pre)}}/> : <Button color="inherit" onClick={()=>{navigate("/login")}}>Login</Button>
             } 
             <UserPopup open={openPopup} data={auth}/>
           </Box>

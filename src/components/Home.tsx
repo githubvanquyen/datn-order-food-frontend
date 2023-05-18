@@ -128,7 +128,7 @@ export default function Home() {
                         {product.name}
                       </Typography>
                       <Typography color="rgb(50, 50, 50)">
-                        {product.description}
+                        {product.description.length > 50 ? product.description.slice(0, 50) + "..." : product.description}
                       </Typography>
                     </CardContent>
                     <CardContent sx={{ textTransform: "uppercase" }}>
@@ -146,6 +146,28 @@ export default function Home() {
                 </Card>
               </Grid>
             ))}
+          </Grid>
+          <Grid container spacing={4} mt={8}>
+            <div className='recommend'>
+            <div>
+              <div className='home-title'>Không đợi chờ</div>
+              <div className='home-content'>
+                Thưởng thức món ăn yêu thích tại địa điểm yêu thích trong vòng 30 phút!
+              </div>
+            </div>
+            <div>
+              <div className='home-title' >Thanh toán linh hoạt</div>
+              <div className='home-content'>
+              Thanh toán dễ dàng với tiền mặt hoặc các phương thức thanh toán trực tuyến phổ biến.
+              </div>
+            </div>
+            <div>
+              <div className='home-title'>Tận hưởng dịch vụ</div>
+              <div className='home-content'>
+                Món ăn đa dạng, đặt hàng dễ dàng, theo dõi đơn tiện lợi, đổi trả món nhanh chóng.
+              </div>
+            </div>
+            </div>
           </Grid>
         </Container>
       </main>

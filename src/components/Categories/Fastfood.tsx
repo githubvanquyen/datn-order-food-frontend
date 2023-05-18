@@ -64,7 +64,7 @@ export default function Fastfood() {
 
     React.useEffect(() =>{
         const fetchData = async () =>{
-        const response = await axios.get(`http://localhost:4000/api/collection/get-collection-by-id?id=${3}`)
+        const response = await axios.get(`http://localhost:4000/api/collection/get-collection-by-id?id=${2}`)
         const responseFls = await axios.get<any, FlashsaleRes>(`http://localhost:4000/api/flashsale/get-flashsale-datenow`)
         if(responseFls.data.success){
             setInfoDiscount({
@@ -93,7 +93,7 @@ export default function Fastfood() {
             {/* End hero unit */}
             <Grid container  spacing={4}>
                 <Grid item xs={12} sm={6} md={12}>
-                    <Typography variant='h5'>Đồ ăn nhanh</Typography>
+                    <Typography variant='h5'>Đồ ăn</Typography>
                     <div>Nhanh gọn nhưng vẫn đảm bảo chất lượng</div>
                 </Grid>
                 <Grid item xs={12} sm={6} md={12}>
@@ -117,7 +117,7 @@ export default function Fastfood() {
                             {product.name}
                           </Typography>
                           <Typography color="rgb(50, 50, 50)">
-                            {product.description}
+                          {product.description.length > 50 ? product.description.slice(0, 50) + "..." : product.description}
                           </Typography>
                         </CardContent>
                         <CardContent sx={{ textTransform: "uppercase" }}>

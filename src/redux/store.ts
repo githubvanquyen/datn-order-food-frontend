@@ -13,6 +13,7 @@ import storage from "redux-persist/lib/storage";
 import productSlide from "./slide/productSlide";
 import orderSlider from "./slide/orderSlider";
 import authSlide from "./slide/authSlide";
+import discountSlide from "./slide/discountSlide";
 
 const persistConfig = {
     key: "root",
@@ -23,7 +24,8 @@ const persistConfig = {
 const rootReducer = combineReducers({
   auth: authSlide,
   product: productSlide,
-  order: orderSlider
+  order: orderSlider,
+  discount: discountSlide
 })
 const persistReducers = persistReducer(persistConfig, rootReducer);
 
